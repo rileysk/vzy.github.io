@@ -8,21 +8,23 @@
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       height: 100%;
+      overflow: hidden;
       background: black;
       font-family: 'Segoe UI', sans-serif;
     }
 
     canvas {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 0;
     }
 
     .center-text {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -60,7 +62,11 @@
       canvas.height = window.innerHeight;
     }
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createStars(400); // Recreate to fill the screen
+    });
+
     resizeCanvas();
 
     function createStars(count) {
