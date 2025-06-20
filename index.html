@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>vzy</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: black;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 0 0 15px white, 0 0 30px white;
+      cursor: pointer;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 2s ease-out forwards;
+      transition: transform 0.2s ease;
+    }
+
+    .center-text:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+  <div class="center-text" onclick="window.location.href='https://riley.cat'">vzy</div>
+
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createStars(count) {
+      stars = [];
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          z: Math.random() * canvas.width
+        });
+      }
+    }
+
+    function moveStars() {
+      for (let star of stars) {
+        star.z -= 4;
+        if (star.z <= 0) {
+          star.z = canvas.width;
+          star.x = Math.random() * canvas.width;
+          star.y = Math.random() * canvas.height;
+        }
+      }
+    }
+
+    function drawStars() {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let star of stars) {
+        let k = 128.0 / star.z;
+        let x = star.x * k + canvas.width / 2;
+        let y = star.y * k + canvas.height / 2;
+        if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+          let size = (1 - star.z / canvas.width) * 2;
+          ctx.fillStyle = 'white';
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+    }
+
+    function animate() {
+      moveStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
+
+    createStars(400);
+    animate();
+  </script>
+</body>
+</html>
